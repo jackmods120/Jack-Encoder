@@ -1,14 +1,15 @@
 // ─────────────────────────────────────────
-//  ✦ JACK Base64 Bot — Global Premium Edition ✦
-//  سیستەمی فرەزمانی بێ داتابەیس (Stateless i18n)
+//  ✦ JACK Base64 Bot — Global Premium v2 ✦
+//  سیستەمی ناردنی ڕاستەوخۆی زمانەکان لەگەڵ /start
 // ─────────────────────────────────────────
 
 const TOKEN = process.env.BOT_TOKEN;
 
-// فەرهەنگی زمانەکان
+// فەرهەنگی زمانەکان و دەقەکان
 const i18n = {
   ku: {
-    start: "<b>✦ بەخێربێیت بۆ JACK Base64 Bot ✦</b>\n\nتەنها <b>دەقەکە</b>، یان <b>کۆدەکەت</b> بنێرە.",
+    start: "<b>🌐 تکایە زمانەکەت هەڵبژێرە / Please select your language:</b>",
+    startSelected: "<b>زمانەکە بە سەرکەوتوویی جێگیرکرا! 🇹🇯</b>\n\nئێستا هەر دەقێک یان کۆدێک بنێریت، دوگمەی کۆدکردن و کردنەوەت بۆ سەر شاشە دێت.",
     choose: "⚙️ هەڵبژێرە دەتەوێت چی لەم دەقە بکەین:",
     encodeBtn: "🔐 کۆدکردن",
     decodeBtn: "🔓 کردنەوە",
@@ -22,7 +23,8 @@ const i18n = {
     selectLang: "🌐 زمانێک هەڵبژێرە / Select Language:"
   },
   en: {
-    start: "<b>✦ Welcome to JACK Base64 Bot ✦</b>\n\nJust send your <b>text</b> or <b>code</b>.",
+    start: "<b>🌐 Please select your language:</b>",
+    startSelected: "<b>Language successfully set! 🇬🇧</b>\n\nNow, send any text or code to encode or decode it.",
     choose: "⚙️ Choose what to do with this text:",
     encodeBtn: "🔐 Encode",
     decodeBtn: "🔓 Decode",
@@ -36,7 +38,8 @@ const i18n = {
     selectLang: "🌐 Select a Language:"
   },
   ar: {
-    start: "<b>✦ أهلاً بك في بوت JACK Base64 ✦</b>\n\nفقط أرسل <b>النص</b> أو <b>الكود</b>.",
+    start: "<b>🌐 الرجاء اختيار لغتك / Please select your language:</b>",
+    startSelected: "<b>تم تعيين اللغة بنجاح! 🇸🇦</b>\n\nالآن، أرسل أي نص أو كود لتشفيره أو فك تشفيره.",
     choose: "⚙️ اختر ماذا تريد أن تفعل بهذا النص:",
     encodeBtn: "🔐 تشفير",
     decodeBtn: "🔓 فك التشفير",
@@ -50,6 +53,8 @@ const i18n = {
     selectLang: "🌐 اختر لغة:"
   },
   hi: {
+    start: "<b>🌐 कृपया अपनी भाषा चुनें / Please select your language:</b>",
+    startSelected: "<b>भाषा सफलतापूर्वक सेट हो गई है! 🇮🇳</b>\n\nअब, किसी भी टेक्स्ट या कोड को एनकोड या डिकोڈ करने के लिए भेजें।",
     choose: "⚙️ चुनें कि इस पाठ के साथ क्या करना है:",
     encodeBtn: "🔐 एनकोड",
     decodeBtn: "🔓 डिकोड",
@@ -63,6 +68,8 @@ const i18n = {
     selectLang: "🌐 भाषा चुनें:"
   },
   zh: {
+    start: "<b>🌐 请选择您的语言 / Please select your language:</b>",
+    startSelected: "<b>语言设置成功！🇨🇳</b>\n\n现在，发送任何文本或代码即可进行编码或解码。",
     choose: "⚙️ 请选择对该文本的操作：",
     encodeBtn: "🔐 编码",
     decodeBtn: "🔓 解码",
@@ -76,6 +83,8 @@ const i18n = {
     selectLang: "🌐 选择语言："
   },
   ko: {
+    start: "<b>🌐 언어를 선택하세요 / Please select your language:</b>",
+    startSelected: "<b>언어가 성공적으로 설정되었습니다! 🇰🇷</b>\n\n이제 인코딩이나 디코딩할 텍스트나 코드를 보내주세요.",
     choose: "⚙️ 텍스트로 수행할 작업을 선택하세요:",
     encodeBtn: "🔐 인코딩",
     decodeBtn: "🔓 디코딩",
@@ -89,6 +98,8 @@ const i18n = {
     selectLang: "🌐 언어 선택:"
   },
   ur: {
+    start: "<b>🌐 براہ کرم اپنی زبان منتخب کریں / Please select your language:</b>",
+    startSelected: "<b>زبان کامیابی کے ساتھ سیٹ ہو گئی ہے! 🇵🇰</b>\n\nاب، کسی بھی متن یا کوڈ کو انکوڈ یا ڈیکوڈ کرنے کے لیے بھیجیں۔",
     choose: "⚙️ منتخب کریں کہ اس متن کے ساتھ کیا کرنا ہے:",
     encodeBtn: "🔐 انکوڈ",
     decodeBtn: "🔓 ڈیکوڈ",
@@ -112,7 +123,7 @@ async function sendTelegram(method, data) {
   });
 }
 
-// دروستکردنی مینیوی سەرەکی بەپێی زمان
+// مینیوی سەرەکی بۆ دەقەکان
 function getMainMenu(langCode) {
   const t = i18n[langCode] || i18n["ku"];
   return {
@@ -129,18 +140,22 @@ function getMainMenu(langCode) {
   };
 }
 
-// مینیوی زمانەکان
-function getLangsMenu(currentLangCode) {
+// مینیوی زمانەکان (لینک کراو لەگەڵ دۆخی /start)
+function getLangsMenu(currentLangCode, isStartMode) {
   const t = i18n[currentLangCode] || i18n["ku"];
-  return {
-    inline_keyboard: [
-      [{ text: "🇹🇯 کوردی", callback_data: "menu|ku" }, { text: "🇬🇧 English", callback_data: "menu|en" }],
-      [{ text: "🇸🇦 العربية", callback_data: "menu|ar" }, { text: "🇮🇳 हिंदी", callback_data: "menu|hi" }],
-      [{ text: "🇨🇳 中文", callback_data: "menu|zh" }, { text: "🇰🇷 한국어", callback_data: "menu|ko" }],
-      [{ text: "🇵🇰 اردو", callback_data: "menu|ur" }],
-      [{ text: t.backBtn, callback_data: `menu|${currentLangCode}` }]
-    ]
-  };
+  const rows = [
+    [{ text: "🇹🇯 کوردی", callback_data: "menu|ku" }, { text: "🇬🇧 English", callback_data: "menu|en" }],
+    [{ text: "🇸🇦 العربية", callback_data: "menu|ar" }, { text: "🇮🇳 हिंदी", callback_data: "menu|hi" }],
+    [{ text: "🇨🇳 中文", callback_data: "menu|zh" }, { text: "🇰🇷 한국어", callback_data: "menu|ko" }],
+    [{ text: "🇵🇰 اردو", callback_data: "menu|ur" }]
+  ];
+  
+  // ئەگەر لە دۆخی ستارت نەبوو، دوگمەی گەڕانەوە نیشان بدە بۆ چوونەوە سەر مینیوی دەقەکە
+  if (!isStartMode) {
+    rows.push([{ text: t.backBtn, callback_data: `menu|${currentLangCode}` }]);
+  }
+  
+  return { inline_keyboard: rows };
 }
 
 export default async function handler(req, res) {
@@ -149,16 +164,18 @@ export default async function handler(req, res) {
   try {
     const body = req.body;
 
-    // ── ١. مامەڵەکردن لەگەڵ دوگمەکان (Callbacks) ──
+    // ── ١. مامەڵەکردن لەگەڵ کلیکی دوگمەکان (Callbacks) ──
     if (body.callback_query) {
       const cb = body.callback_query;
       const chatId = cb.message.chat.id;
       const messageId = cb.message.message_id;
       
-      // دابەشکردنی داتای دوگمەکە (نموونە: encode|ku دەبێتە action="encode" وە langCode="ku")
       const [action, langCode] = cb.data.split("|");
       const t = i18n[langCode] || i18n["ku"];
+      
+      // وەرگرتنی ئەو دەقەی کە بۆتەکە وەڵامی داوەتەوە
       const targetText = cb.message.reply_to_message?.text || "";
+      const isStartMode = (targetText === "/start");
 
       if (action === "delete") {
          await sendTelegram("deleteMessage", { chat_id: chatId, message_id: messageId });
@@ -170,15 +187,29 @@ export default async function handler(req, res) {
          return res.status(200).send("OK");
       }
 
-      // گەڕانەوە بۆ مینیوی سەرەکی بە زمانی هەڵبژێردراو
+      // کردارەکانی گەڕانەوە یان دیاریکردنی زمان
       if (action === "menu") {
-         await sendTelegram("editMessageText", {
-             chat_id: chatId,
-             message_id: messageId,
-             text: t.choose,
-             parse_mode: "HTML",
-             reply_markup: getMainMenu(langCode)
-         });
+         if (isStartMode) {
+            // ئەگەر لە شاشەی ستارتەوە زمانەکەی گۆڕی، نامەی ڕێبەریکردنی نیشان بدە لەگەڵ دوگمەی گۆڕینی زمان
+            await sendTelegram("editMessageText", {
+                chat_id: chatId,
+                message_id: messageId,
+                text: t.startSelected,
+                parse_mode: "HTML",
+                reply_markup: {
+                  inline_keyboard: [[{ text: t.langBtn, callback_data: `langs|${langCode}` }]]
+                }
+            });
+         } else {
+            // ئەگەر دەقێکی ناردبوو، مینیوی ئاسایی پێ نیشان بدە بۆ کۆدکردن
+            await sendTelegram("editMessageText", {
+                chat_id: chatId,
+                message_id: messageId,
+                text: t.choose,
+                parse_mode: "HTML",
+                reply_markup: getMainMenu(langCode)
+            });
+         }
          return res.status(200).send("OK");
       }
 
@@ -189,12 +220,12 @@ export default async function handler(req, res) {
              message_id: messageId,
              text: t.selectLang,
              parse_mode: "HTML",
-             reply_markup: getLangsMenu(langCode)
+             reply_markup: getLangsMenu(langCode, isStartMode)
          });
          return res.status(200).send("OK");
       }
 
-      // دوگمەی گەڕانەوە و سڕینەوە بۆ ئەنجامەکان
+      // ئەنجامەکانی کۆدکردن و کردنەوە
       const resultMarkup = { 
           inline_keyboard: [[
               { text: t.backBtn, callback_data: `menu|${langCode}` },
@@ -232,23 +263,26 @@ export default async function handler(req, res) {
     const chatId = message.chat.id;
     const text = message.text.trim();
 
-    // دۆزینەوەی زمانی ئۆتۆماتیکی. ئەگەر تورکی بوو (tr) ئەوا دەگۆڕێت بۆ ئینگلیزی
+    // ناسینەوەی زمانی بەکارهێنەر (تورکی ڕاستەوخۆ دەبێتە ئینگلیزی)
     let userLang = message.from.language_code?.substring(0, 2) || "ku";
     if (userLang === "tr") userLang = "en"; 
-    if (!i18n[userLang]) userLang = "ku"; // کوردی وەک بنچینە
+    if (!i18n[userLang]) userLang = "ku";
 
     const t = i18n[userLang];
 
+    // ئەگەر فەرمانی /start بوو، ڕاستەوخۆ مینیوی زمانەکان دەنێرێت بە شێوازی Reply
     if (text === "/start") {
       await sendTelegram("sendMessage", {
         chat_id: chatId,
-        text: t.start || i18n["ku"].start,
-        parse_mode: "HTML"
+        text: t.start,
+        parse_mode: "HTML",
+        reply_to_message_id: message.message_id,
+        reply_markup: getLangsMenu(userLang, true) // لێرەدا true دەنێرین بۆ شاردنەوەی دوگمەی گەڕانەوەی ناپێویست
       });
       return res.status(200).send("OK");
     }
 
-    // ناردنی مینیوی هەڵبژاردنەکە
+    // ناردنی مینیوی هەڵبژاردن بۆ دەقە نێردراوەکانی تر
     await sendTelegram("sendMessage", {
       chat_id: chatId,
       text: t.choose,
